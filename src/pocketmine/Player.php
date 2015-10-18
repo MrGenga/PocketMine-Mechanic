@@ -3329,14 +3329,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	public function subtractFood($amount){
 		if($this->getFood()-$amount <= 6 && !($this->getFood() <= 6)) {
 			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, false);
-			$this->removeEffect(Effect::SLOWNESS);
+			//$this->removeEffect(Effect::SLOWNESS);
 		} elseif($this->getFood()-$amount < 6 && !($this->getFood() > 6)) {
 			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, true);
-			$effect = Effect::getEffect(Effect::SLOWNESS);
+			/*$effect = Effect::getEffect(Effect::SLOWNESS);
 			$effect->setDuration(0x7fffffff);
 			$effect->setAmplifier(2);
 			$effect->setVisible(false);
-			$this->addEffect($effect);
+			$this->addEffect($effect);*/
 		}
 		if($this->food - $amount < 0) return;
 		$this->setFood($this->getFood() - $amount);
