@@ -23,7 +23,21 @@ namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Float extends NamedTag{
 
@@ -32,10 +46,10 @@ class Float extends NamedTag{
 	}
 
 	public function read(NBT $nbt){
-		$this->value = $nbt->getFloat();
+		$this->value = $nbt->endianness === 1 ? (\ENDIANNESS === 0 ? \unpack("f", $nbt->get(4))[1] : \unpack("f", \strrev($nbt->get(4)))[1]) : (\ENDIANNESS === 0 ? \unpack("f", \strrev($nbt->get(4)))[1] : \unpack("f", $nbt->get(4))[1]);
 	}
 
 	public function write(NBT $nbt){
-		$nbt->putFloat($this->value);
+		$nbt->buffer .= $nbt->endianness === 1 ? (\ENDIANNESS === 0 ? \pack("f", $this->value) : \strrev(\pack("f", $this->value))) : (\ENDIANNESS === 0 ? \strrev(\pack("f", $this->value)) : \pack("f", $this->value));
 	}
 }

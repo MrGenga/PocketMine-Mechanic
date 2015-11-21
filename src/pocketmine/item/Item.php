@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@
 namespace pocketmine\item;
 
 use pocketmine\block\Block;
+use pocketmine\block\Fence;
 use pocketmine\block\Flower;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Squid;
@@ -42,14 +43,14 @@ use pocketmine\nbt\NBT;
 
 class Item{
 
-	private static $cachedParser = null;
+	private static $cachedParser = \null;
 
 	/**
 	 * @param $tag
 	 * @return Compound
 	 */
 	private static function parseCompoundTag($tag){
-		if(self::$cachedParser === null){
+		if(self::$cachedParser === \null){
 			self::$cachedParser = new NBT(NBT::LITTLE_ENDIAN);
 		}
 
@@ -62,7 +63,7 @@ class Item{
 	 * @return string
 	 */
 	private static function writeCompoundTag(Compound $tag){
-		if(self::$cachedParser === null){
+		if(self::$cachedParser === \null){
 			self::$cachedParser = new NBT(NBT::LITTLE_ENDIAN);
 		}
 
@@ -209,7 +210,7 @@ class Item{
 	const LILY_PAD = 111;
 	const NETHER_BRICKS = 112;
 	const NETHER_BRICK_BLOCK = 112;
-
+	const NETHER_BRICK_FENCE = 113;
 	const NETHER_BRICKS_STAIRS = 114;
 
 	const ENCHANTING_TABLE = 116;
@@ -442,48 +443,65 @@ class Item{
 
 
 	/** @var \SplFixedArray */
-	public static $list = null;
+	public static $list = \null;
 	protected $block;
 	protected $id;
 	protected $meta;
 	private $tags = "";
-	private $cachedNBT = null;
+	private $cachedNBT = \null;
 	public $count;
 	protected $durability = 0;
 	protected $name;
 
 	public function canBeActivated(){
-		return false;
+		return \false;
 	}
 
 	public static function init(){
-		if(self::$list === null){
+		if(self::$list === \null){
 			self::$list = new \SplFixedArray(65536);
-			self::$list[self::SUGARCANE] = Sugarcane::class;
-			self::$list[self::WHEAT_SEEDS] = WheatSeeds::class;
-			self::$list[self::PUMPKIN_SEEDS] = PumpkinSeeds::class;
-			self::$list[self::MELON_SEEDS] = MelonSeeds::class;
-			self::$list[self::MUSHROOM_STEW] = MushroomStew::class;
-			self::$list[self::BEETROOT_SOUP] = BeetrootSoup::class;
-			self::$list[self::CARROT] = Carrot::class;
-			self::$list[self::POTATO] = Potato::class;
-			self::$list[self::BEETROOT_SEEDS] = BeetrootSeeds::class;
-			self::$list[self::SIGN] = Sign::class;
-			self::$list[self::WOODEN_DOOR] = WoodenDoor::class;
-			self::$list[self::BUCKET] = Bucket::class;
-			self::$list[self::IRON_DOOR] = IronDoor::class;
-			self::$list[self::CAKE] = Cake::class;
-			self::$list[self::BED] = Bed::class;
-			self::$list[self::PAINTING] = Painting::class;
-			self::$list[self::COAL] = Coal::class;
+			self::$list[self::IRON_SHOVEL] = IronShovel::class;
+			self::$list[self::IRON_PICKAXE] = IronPickaxe::class;
+			self::$list[self::IRON_AXE] = IronAxe::class;
+			self::$list[self::FLINT_STEEL] = FlintSteel::class;
 			self::$list[self::APPLE] = Apple::class;
-			self::$list[self::SPAWN_EGG] = SpawnEgg::class;
+			self::$list[self::BOW] = Bow::class;
+			self::$list[self::ARROW] = Arrow::class;
+			self::$list[self::COAL] = Coal::class;
 			self::$list[self::DIAMOND] = Diamond::class;
+			self::$list[self::IRON_INGOT] = IronIngot::class;
+			self::$list[self::GOLD_INGOT] = GoldIngot::class;
+			self::$list[self::IRON_SWORD] = IronSword::class;
+			self::$list[self::WOODEN_SWORD] = WoodenSword::class;
+			self::$list[self::WOODEN_SHOVEL] = WoodenShovel::class;
+			self::$list[self::WOODEN_PICKAXE] = WoodenPickaxe::class;
+			self::$list[self::WOODEN_AXE] = WoodenAxe::class;
+			self::$list[self::STONE_SWORD] = StoneSword::class;
+			self::$list[self::STONE_SHOVEL] = StoneShovel::class;
+			self::$list[self::STONE_PICKAXE] = StonePickaxe::class;
+			self::$list[self::STONE_AXE] = StoneAxe::class;
+			self::$list[self::DIAMOND_SWORD] = DiamondSword::class;
+			self::$list[self::DIAMOND_SHOVEL] = DiamondShovel::class;
+			self::$list[self::DIAMOND_PICKAXE] = DiamondPickaxe::class;
+			self::$list[self::DIAMOND_AXE] = DiamondAxe::class;
 			self::$list[self::STICK] = Stick::class;
-			self::$list[self::SNOWBALL] = Snowball::class;
 			self::$list[self::BOWL] = Bowl::class;
+			self::$list[self::MUSHROOM_STEW] = MushroomStew::class;
+			self::$list[self::GOLD_SWORD] = GoldSword::class;
+			self::$list[self::GOLD_SHOVEL] = GoldShovel::class;
+			self::$list[self::GOLD_PICKAXE] = GoldPickaxe::class;
+			self::$list[self::GOLD_AXE] = GoldAxe::class;
+			self::$list[self::STRING] = StringItem::class;
 			self::$list[self::FEATHER] = Feather::class;
-			self::$list[self::BRICK] = Brick::class;
+			self::$list[self::GUNPOWDER] = Gunpowder::class;
+			self::$list[self::WOODEN_HOE] = WoodenHoe::class;
+			self::$list[self::STONE_HOE] = StoneHoe::class;
+			self::$list[self::IRON_HOE] = IronHoe::class;
+			self::$list[self::DIAMOND_HOE] = DiamondHoe::class;
+			self::$list[self::GOLD_HOE] = GoldHoe::class;
+			self::$list[self::WHEAT_SEEDS] = WheatSeeds::class;
+			self::$list[self::WHEAT] = Wheat::class;
+			self::$list[self::BREAD] = Bread::class;
 			self::$list[self::LEATHER_CAP] = LeatherCap::class;
 			self::$list[self::LEATHER_TUNIC] = LeatherTunic::class;
 			self::$list[self::LEATHER_PANTS] = LeatherPants::class;
@@ -496,55 +514,75 @@ class Item{
 			self::$list[self::IRON_CHESTPLATE] = IronChestplate::class;
 			self::$list[self::IRON_LEGGINGS] = IronLeggings::class;
 			self::$list[self::IRON_BOOTS] = IronBoots::class;
-			self::$list[self::GOLD_HELMET] = GoldHelmet::class;
-			self::$list[self::GOLD_CHESTPLATE] = GoldChestplate::class;
-			self::$list[self::GOLD_LEGGINGS] = GoldLeggings::class;
-			self::$list[self::GOLD_BOOTS] = GoldBoots::class;
 			self::$list[self::DIAMOND_HELMET] = DiamondHelmet::class;
 			self::$list[self::DIAMOND_CHESTPLATE] = DiamondChestplate::class;
 			self::$list[self::DIAMOND_LEGGINGS] = DiamondLeggings::class;
 			self::$list[self::DIAMOND_BOOTS] = DiamondBoots::class;
-			self::$list[self::IRON_SWORD] = IronSword::class;
-			self::$list[self::IRON_INGOT] = IronIngot::class;
-			self::$list[self::GOLD_INGOT] = GoldIngot::class;
-			self::$list[self::IRON_SHOVEL] = IronShovel::class;
-			self::$list[self::IRON_PICKAXE] = IronPickaxe::class;
-			self::$list[self::IRON_AXE] = IronAxe::class;
-			self::$list[self::IRON_HOE] = IronHoe::class;
-			self::$list[self::DIAMOND_SWORD] = DiamondSword::class;
-			self::$list[self::DIAMOND_SHOVEL] = DiamondShovel::class;
-			self::$list[self::DIAMOND_PICKAXE] = DiamondPickaxe::class;
-			self::$list[self::DIAMOND_AXE] = DiamondAxe::class;
-			self::$list[self::DIAMOND_HOE] = DiamondHoe::class;
-			self::$list[self::GOLD_SWORD] = GoldSword::class;
-			self::$list[self::GOLD_SHOVEL] = GoldShovel::class;
-			self::$list[self::GOLD_PICKAXE] = GoldPickaxe::class;
-			self::$list[self::GOLD_AXE] = GoldAxe::class;
-			self::$list[self::GOLD_HOE] = GoldHoe::class;
-			self::$list[self::STONE_SWORD] = StoneSword::class;
-			self::$list[self::STONE_SHOVEL] = StoneShovel::class;
-			self::$list[self::STONE_PICKAXE] = StonePickaxe::class;
-			self::$list[self::STONE_AXE] = StoneAxe::class;
-			self::$list[self::STONE_HOE] = StoneHoe::class;
-			self::$list[self::WOODEN_SWORD] = WoodenSword::class;
-			self::$list[self::WOODEN_SHOVEL] = WoodenShovel::class;
-			self::$list[self::WOODEN_PICKAXE] = WoodenPickaxe::class;
-			self::$list[self::WOODEN_AXE] = WoodenAxe::class;
-			self::$list[self::WOODEN_HOE] = WoodenHoe::class;
-			self::$list[self::FLINT_STEEL] = FlintSteel::class;
-			self::$list[self::SHEARS] = Shears::class;
-			self::$list[self::BOW] = Bow::class;
-
+			self::$list[self::GOLD_HELMET] = GoldHelmet::class;
+			self::$list[self::GOLD_CHESTPLATE] = GoldChestplate::class;
+			self::$list[self::GOLD_LEGGINGS] = GoldLeggings::class;
+			self::$list[self::GOLD_BOOTS] = GoldBoots::class;
+			self::$list[self::FLINT] = Flint::class;
+			self::$list[self::RAW_PORKCHOP] = RawPorkchop::class;
+			self::$list[self::COOKED_PORKCHOP] = CookedPorkchop::class;
+			self::$list[self::PAINTING] = Painting::class;
+			self::$list[self::GOLDEN_APPLE] = GoldenApple::class;
+			self::$list[self::SIGN] = Sign::class;
+			self::$list[self::WOODEN_DOOR] = WoodenDoor::class;
+			self::$list[self::BUCKET] = Bucket::class;
+			self::$list[self::MINECART] = Minecart::class;
+			self::$list[self::IRON_DOOR] = IronDoor::class;
+			self::$list[self::REDSTONE] = Redstone::class;
+			self::$list[self::SNOWBALL] = Snowball::class;
+			self::$list[self::LEATHER] = Leather::class;
+			self::$list[self::BRICK] = Brick::class;
+			self::$list[self::CLAY] = Clay::class;
+			self::$list[self::SUGARCANE] = Sugarcane::class;
+			self::$list[self::PAPER] = Paper::class;
+			self::$list[self::BOOK] = Book::class;
+			self::$list[self::SLIMEBALL] = Slimeball::class;
+			self::$list[self::EGG] = Egg::class;
+			self::$list[self::COMPASS] = Compass::class;
+			self::$list[self::CLOCK] = Clock::class;
+			self::$list[self::GLOWSTONE_DUST] = GlowstoneDust::class;
 			self::$list[self::RAW_FISH] = Fish::class;
 			self::$list[self::COOKED_FISH] = CookedFish::class;
+			self::$list[self::DYE] = Dye::class;
+			self::$list[self::BONE] = Bone::class;
+			self::$list[self::SUGAR] = Sugar::class;
+			self::$list[self::CAKE] = Cake::class;
+			self::$list[self::BED] = Bed::class;
+			self::$list[self::COOKIE] = Cookie::class;
+			self::$list[self::SHEARS] = Shears::class;
+			self::$list[self::MELON] = Melon::class;
+			self::$list[self::PUMPKIN_SEEDS] = PumpkinSeeds::class;
+			self::$list[self::MELON_SEEDS] = MelonSeeds::class;
+			self::$list[self::RAW_BEEF] = RawBeef::class;
+			self::$list[self::STEAK] = Steak::class;
+			self::$list[self::RAW_CHICKEN] = RawChicken::class;
+			self::$list[self::COOKED_CHICKEN] = CookedChicken::class;
+			self::$list[self::GOLD_NUGGET] = GoldNugget::class;
+			self::$list[self::SPAWN_EGG] = SpawnEgg::class;
+			self::$list[self::EMERALD] = Emerald::class;
+			self::$list[self::CARROT] = Carrot::class;
+			self::$list[self::POTATO] = Potato::class;
+			self::$list[self::BAKED_POTATO] = BakedPotato::class;
+			self::$list[self::PUMPKIN_PIE] = PumpkinPie::class;
+			self::$list[self::NETHER_BRICK] = NetherBrick::class;
+			self::$list[self::QUARTZ] = Quartz::class;
+			self::$list[self::QUARTZ] = NetherQuartz::class;
+			// self::$list[self::CAMERA] = Camera::class;
+			self::$list[self::BEETROOT] = Beetroot::class;
+			self::$list[self::BEETROOT_SEEDS] = BeetrootSeeds::class;
+			self::$list[self::BEETROOT_SOUP] = BeetrootSoup::class;
 
 			for($i = 0; $i < 256; ++$i){
-				if(Block::$list[$i] !== null){
+				if(Block::$list[$i] !== \null){
 					self::$list[$i] = Block::$list[$i];
 				}
 			}
 		}
-		
+
 		self::initCreativeItems();
 	}
 
@@ -649,6 +687,7 @@ class Item{
 		self::addCreativeItem(Item::get(Item::ICE, 0));
 		self::addCreativeItem(Item::get(Item::SNOW_BLOCK, 0));
 		self::addCreativeItem(Item::get(Item::END_STONE, 0));
+                self::addCreativeItem(Item::get(Item::QUARTZ, 0));
 
 		//Decoration
 		self::addCreativeItem(Item::get(Item::COBBLESTONE_WALL, 0));
@@ -671,12 +710,13 @@ class Item{
 		self::addCreativeItem(Item::get(Item::GLASS_PANE, 0));
 		self::addCreativeItem(Item::get(Item::WOODEN_DOOR, 0));
 		self::addCreativeItem(Item::get(Item::TRAPDOOR, 0));
-		self::addCreativeItem(Item::get(Item::FENCE, 0));
-		self::addCreativeItem(Item::get(Item::FENCE, 1));
-		self::addCreativeItem(Item::get(Item::FENCE, 2));
-		self::addCreativeItem(Item::get(Item::FENCE, 3));
-		self::addCreativeItem(Item::get(Item::FENCE, 4));
-		self::addCreativeItem(Item::get(Item::FENCE, 5));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_OAK));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_SPRUCE));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_BIRCH));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_JUNGLE));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_ACACIA));
+		self::addCreativeItem(Item::get(Item::FENCE, Fence::FENCE_DARKOAK));
+		self::addCreativeItem(Item::get(Item::NETHER_BRICK_FENCE, 0));
 		self::addCreativeItem(Item::get(Item::FENCE_GATE, 0));
 		self::addCreativeItem(Item::get(Item::FENCE_GATE_BIRCH, 0));
 		self::addCreativeItem(Item::get(Item::FENCE_GATE_SPRUCE, 0));
@@ -868,11 +908,11 @@ class Item{
 	public static function isCreativeItem(Item $item){
 		foreach(Item::$creative as $i => $d){
 			if($item->equals($d, !$item->isTool())){
-				return true;
+				return \true;
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
 	/**
@@ -880,7 +920,7 @@ class Item{
 	 * @return Item
 	 */
 	public static function getCreativeItem($index){
-		return isset(Item::$creative[$index]) ? Item::$creative[$index] : null;
+		return isset(Item::$creative[$index]) ? Item::$creative[$index] : \null;
 	}
 
 	/**
@@ -900,7 +940,7 @@ class Item{
 	public static function get($id, $meta = 0, $count = 1, $tags = ""){
 		try{
 			$class = self::$list[$id];
-			if($class === null){
+			if($class === \null){
 				return (new Item($id, $meta, $count))->setCompoundTag($tags);
 			}elseif($id < 256){
 				return (new ItemBlock(new $class($meta), $meta, $count))->setCompoundTag($tags);
@@ -912,25 +952,25 @@ class Item{
 		}
 	}
 
-	public static function fromString($str, $multiple = false){
-		if($multiple === true){
+	public static function fromString($str, $multiple = \false){
+		if($multiple === \true){
 			$blocks = [];
-			foreach(explode(",", $str) as $b){
-				$blocks[] = self::fromString($b, false);
+			foreach(\explode(",", $str) as $b){
+				$blocks[] = self::fromString($b, \false);
 			}
 
 			return $blocks;
 		}else{
-			$b = explode(":", str_replace([" ", "minecraft:"], ["_", ""], trim($str)));
+			$b = \explode(":", \str_replace([" ", "minecraft:"], ["_", ""], \trim($str)));
 			if(!isset($b[1])){
 				$meta = 0;
 			}else{
 				$meta = $b[1] & 0xFFFF;
 			}
 
-			if(defined(Item::class . "::" . strtoupper($b[0]))){
-				$item = self::get(constant(Item::class . "::" . strtoupper($b[0])), $meta);
-				if($item->getId() === self::AIR and strtoupper($b[0]) !== "AIR"){
+			if(\defined(Item::class . "::" . \strtoupper($b[0]))){
+				$item = self::get(\constant(Item::class . "::" . \strtoupper($b[0])), $meta);
+				if($item->getId() === self::AIR and \strtoupper($b[0]) !== "AIR"){
 					$item = self::get($b[0] & 0xFFFF, $meta);
 				}
 			}else{
@@ -943,7 +983,7 @@ class Item{
 
 	public function __construct($id, $meta = 0, $count = 1, $name = "Unknown"){
 		$this->id = $id & 0xffff;
-		$this->meta = $meta !== null ? $meta & 0xffff : null;
+		$this->meta = $meta !== \null ? $meta & 0xffff : \null;
 		$this->count = (int) $count;
 		$this->name = $name;
 		if(!isset($this->block) and $this->id <= 0xff and isset(Block::$list[$this->id])){
@@ -951,15 +991,15 @@ class Item{
 			$this->name = $this->block->getName();
 		}
 	}
-	
+
 	public function setCompoundTag($tags){
 		if($tags instanceof Compound){
 			$this->setNamedTag($tags);
 		}else{
 			$this->tags = $tags;
-			$this->cachedNBT = null;
+			$this->cachedNBT = \null;
 		}
-		
+
 		return $this;
 	}
 
@@ -969,22 +1009,22 @@ class Item{
 	public function getCompoundTag(){
 		return $this->tags;
 	}
-	
+
 	public function hasCompoundTag(){
-		return $this->tags !== "" and $this->tags !== null;
+		return $this->tags !== "" and $this->tags !== \null;
 	}
 
 	public function hasCustomBlockData(){
 		if(!$this->hasCompoundTag()){
-			return false;
+			return \false;
 		}
 
 		$tag = $this->getNamedTag();
 		if(isset($tag->BlockEntityTag) and $tag->BlockEntityTag instanceof Compound){
-			return true;
+			return \true;
 		}
 
-		return false;
+		return \false;
 	}
 
 	public function clearCustomBlockData(){
@@ -1019,7 +1059,7 @@ class Item{
 
 	public function getCustomBlockData(){
 		if(!$this->hasCompoundTag()){
-			return null;
+			return \null;
 		}
 
 		$tag = $this->getNamedTag();
@@ -1027,23 +1067,23 @@ class Item{
 			return $tag->BlockEntityTag;
 		}
 
-		return null;
+		return \null;
 	}
 
 	public function hasEnchantments(){
 		if(!$this->hasCompoundTag()){
-			return false;
+			return \false;
 		}
 
 		$tag = $this->getNamedTag();
 		if(isset($tag->ench)){
 			$tag = $tag->ench;
 			if($tag instanceof Enum){
-				return true;
+				return \true;
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
 	/**
@@ -1052,7 +1092,7 @@ class Item{
 	 */
 	public function getEnchantment($id){
 		if(!$this->hasEnchantments()){
-			return null;
+			return \null;
 		}
 
 		foreach($this->getNamedTag()->ench as $entry){
@@ -1063,7 +1103,7 @@ class Item{
 			}
 		}
 
-		return null;
+		return \null;
 	}
 
 	/**
@@ -1081,7 +1121,7 @@ class Item{
 			$tag->ench->setTagType(NBT::TAG_Compound);
 		}
 
-		$found = false;
+		$found = \false;
 
 		foreach($tag->ench as $k => $entry){
 			if($entry["id"] === $ench->getId()){
@@ -1089,13 +1129,13 @@ class Item{
 					"id" => new Short("id", $ench->getId()),
 					"lvl" => new Short("lvl", $ench->getLevel())
 				]);
-				$found = true;
+				$found = \true;
 				break;
 			}
 		}
 
 		if(!$found){
-			$tag->ench->{count($tag->ench) + 1} = new Compound("", [
+			$tag->ench->{\count($tag->ench) + 1} = new Compound("", [
 				"id" => new Short("id", $ench->getId()),
 				"lvl" => new Short("lvl", $ench->getLevel())
 			]);
@@ -1125,18 +1165,18 @@ class Item{
 
 	public function hasCustomName(){
 		if(!$this->hasCompoundTag()){
-			return false;
+			return \false;
 		}
 
 		$tag = $this->getNamedTag();
 		if(isset($tag->display)){
 			$tag = $tag->display;
 			if($tag instanceof Compound and isset($tag->Name) and $tag->Name instanceof String){
-				return true;
+				return \true;
 			}
 		}
 
-		return false;
+		return \false;
 	}
 
 	public function getCustomName(){
@@ -1197,17 +1237,17 @@ class Item{
 
 	public function getNamedTagEntry($name){
 		$tag = $this->getNamedTag();
-		if($tag !== null){
-			return isset($tag->{$name}) ? $tag->{$name} : null;
+		if($tag !== \null){
+			return isset($tag->{$name}) ? $tag->{$name} : \null;
 		}
 
-		return null;
+		return \null;
 	}
-	
+
 	public function getNamedTag(){
 		if(!$this->hasCompoundTag()){
-			return null;
-		}elseif($this->cachedNBT !== null){
+			return \null;
+		}elseif($this->cachedNBT !== \null){
 			return $this->cachedNBT;
 		}
 		return $this->cachedNBT = self::parseCompoundTag($this->tags);
@@ -1241,7 +1281,7 @@ class Item{
 	}
 
 	final public function canBePlaced(){
-		return $this->block !== null and $this->block->canBePlaced();
+		return $this->block !== \null and $this->block->canBePlaced();
 	}
 
 	public function getBlock(){
@@ -1261,7 +1301,7 @@ class Item{
 	}
 
 	public function setDamage($meta){
-		$this->meta = $meta !== null ? $meta & 0xFFFF : null;
+		$this->meta = $meta !== \null ? $meta & 0xFFFF : \null;
 	}
 
 	public function getMaxStackSize(){
@@ -1270,13 +1310,13 @@ class Item{
 
 	final public function getFuelTime(){
 		if(!isset(Fuel::$duration[$this->id])){
-			return null;
+			return \null;
 		}
 		if($this->id !== self::BUCKET or $this->meta === 10){
 			return Fuel::$duration[$this->id];
 		}
 
-		return null;
+		return \null;
 	}
 
 	/**
@@ -1285,49 +1325,49 @@ class Item{
 	 * @return bool
 	 */
 	public function useOn($object){
-		return false;
+		return \false;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isTool(){
-		return false;
+		return \false;
 	}
 
 	/**
 	 * @return int|bool
 	 */
 	public function getMaxDurability(){
-		return false;
+		return \false;
 	}
 
 	public function isPickaxe(){
-		return false;
+		return \false;
 	}
 
 	public function isAxe(){
-		return false;
+		return \false;
 	}
 
 	public function isSword(){
-		return false;
+		return \false;
 	}
 
 	public function isShovel(){
-		return false;
+		return \false;
 	}
 
 	public function isHoe(){
-		return false;
+		return \false;
 	}
 
 	public function isShears(){
-		return false;
+		return \false;
 	}
 
 	final public function __toString(){
-		return "Item " . $this->name . " (" . $this->id . ":" . ($this->meta === null ? "?" : $this->meta) . ")x" . $this->count . ($this->hasCompoundTag() ? " tags:0x".bin2hex($this->getCompoundTag()) : "");
+		return "Item " . $this->name . " (" . $this->id . ":" . ($this->meta === \null ? "?" : $this->meta) . ")x" . $this->count . ($this->hasCompoundTag() ? " tags:0x".\bin2hex($this->getCompoundTag()) : "");
 	}
 
 	public function getDestroySpeed(Block $block, Player $player){
@@ -1335,21 +1375,21 @@ class Item{
 	}
 
 	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
-		return false;
+		return \false;
 	}
 
-	public final function equals(Item $item, $checkDamage = true, $checkCompound = true){
-		return $this->id === $item->getId() and ($checkDamage === false or $this->getDamage() === $item->getDamage()) and ($checkCompound === false or $this->getCompoundTag() === $item->getCompoundTag());
+	public final function equals(Item $item, $checkDamage = \true, $checkCompound = \true){
+		return $this->id === $item->getId() and ($checkDamage === \false or $this->getDamage() === $item->getDamage()) and ($checkCompound === \false or $this->getCompoundTag() === $item->getCompoundTag());
 	}
 
-	public final function deepEquals(Item $item, $checkDamage = true, $checkCompound = true){
+	public final function deepEquals(Item $item, $checkDamage = \true, $checkCompound = \true){
 		if($item->equals($item, $checkDamage, $checkCompound)){
-			return true;
+			return \true;
 		}elseif($item->hasCompoundTag() or $this->hasCompoundTag()){
 			return NBT::matchTree($this->getNamedTag(), $item->getNamedTag());
 		}
 
-		return false;
+		return \false;
 	}
 
 }

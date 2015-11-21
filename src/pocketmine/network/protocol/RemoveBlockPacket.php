@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class RemoveBlockPacket extends DataPacket{
@@ -33,10 +42,10 @@ class RemoveBlockPacket extends DataPacket{
 	public $z;
 
 	public function decode(){
-		$this->eid = $this->getLong();
-		$this->x = $this->getInt();
-		$this->z = $this->getInt();
-		$this->y = $this->getByte();
+		$this->eid = Binary::readLong($this->get(8));
+		$this->x = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
+		$this->z = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
+		$this->y = \ord($this->get(1));
 	}
 
 	public function encode(){

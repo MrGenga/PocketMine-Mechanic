@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class SetHealthPacket extends DataPacket{
@@ -30,12 +39,12 @@ class SetHealthPacket extends DataPacket{
 	public $health;
 
 	public function decode(){
-		$this->health = $this->getInt();
+		$this->health = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putInt($this->health);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \pack("N", $this->health);
 	}
 
 }

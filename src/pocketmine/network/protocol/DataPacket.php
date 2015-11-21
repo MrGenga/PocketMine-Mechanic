@@ -21,11 +21,17 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
-#ifndef COMPILE
 
-#endif
+
+
+
+
+
+
+
+
 
 
 use pocketmine\utils\BinaryStream;
@@ -36,7 +42,7 @@ abstract class DataPacket extends BinaryStream{
 
 	const NETWORK_ID = 0;
 
-	public $isEncoded = false;
+	public $isEncoded = \false;
 	private $channel = 0;
 
 	public function pid(){
@@ -48,7 +54,7 @@ abstract class DataPacket extends BinaryStream{
 	abstract public function decode();
 
 	public function reset(){
-		$this->buffer = chr($this::NETWORK_ID);
+		$this->buffer = \chr($this::NETWORK_ID);
 		$this->offset = 0;
 	}
 
@@ -65,8 +71,8 @@ abstract class DataPacket extends BinaryStream{
 	}
 
 	public function clean(){
-		$this->buffer = null;
-		$this->isEncoded = false;
+		$this->buffer = \null;
+		$this->isEncoded = \false;
 		$this->offset = 0;
 		return $this;
 	}
@@ -75,8 +81,8 @@ abstract class DataPacket extends BinaryStream{
 		$data = [];
 		foreach($this as $k => $v){
 			if($k === "buffer"){
-				$data[$k] = bin2hex($v);
-			}elseif(is_string($v) or (is_object($v) and method_exists($v, "__toString"))){
+				$data[$k] = \bin2hex($v);
+			}elseif(\is_string($v) or (\is_object($v) and \method_exists($v, "__toString"))){
 				$data[$k] = Utils::printable((string) $v);
 			}else{
 				$data[$k] = $v;

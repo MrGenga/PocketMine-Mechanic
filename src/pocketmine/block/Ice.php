@@ -45,9 +45,9 @@ class Ice extends Transparent{
 	}
 
 	public function onBreak(Item $item){
-		$this->getLevel()->setBlock($this, new Water(), true);
+		$this->getLevel()->setBlock($this, new Water(), \true);
 
-		return true;
+		return \true;
 	}
 
 	public function getDrops(Item $item){

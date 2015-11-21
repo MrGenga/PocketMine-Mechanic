@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class HurtArmorPacket extends DataPacket{
@@ -34,8 +43,8 @@ class HurtArmorPacket extends DataPacket{
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putByte($this->health);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \chr($this->health);
 	}
 
 }

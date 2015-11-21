@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class UpdateBlockPacket extends DataPacket{
@@ -43,14 +52,14 @@ class UpdateBlockPacket extends DataPacket{
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putInt(count($this->records));
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \pack("N", \count($this->records));
 		foreach($this->records as $r){
-			$this->putInt($r[0]);
-			$this->putInt($r[1]);
-			$this->putByte($r[2]);
-			$this->putByte($r[3]);
-			$this->putByte(($r[5] << 4) | $r[4]);
+			$this->buffer .= \pack("N", $r[0]);
+			$this->buffer .= \pack("N", $r[1]);
+			$this->buffer .= \chr($r[2]);
+			$this->buffer .= \chr($r[3]);
+			$this->buffer .= \chr(($r[5] << 4) | $r[4]);
 		}
 	}
 

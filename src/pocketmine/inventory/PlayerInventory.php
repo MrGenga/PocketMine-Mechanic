@@ -41,7 +41,7 @@ class PlayerInventory extends BaseInventory{
 	protected $hotbar;
 
 	public function __construct(Human $player){
-		$this->hotbar = array_fill(0, $this->getHotbarSize(), -1);
+		$this->hotbar = \array_fill(0, $this->getHotbarSize(), -1);
 		parent::__construct($player, InventoryType::get(InventoryType::PLAYER));
 	}
 
@@ -132,7 +132,7 @@ class PlayerInventory extends BaseInventory{
 		$pk->slot = $this->getHeldItemSlot();
 		$pk->selectedSlot = $this->getHeldItemIndex();
 
-		if(!is_array($target)){
+		if(!\is_array($target)){
 			$target->dataPacket($pk);
 			if($target === $this->getHolder()){
 				$this->sendSlot($this->getHeldItemSlot(), $target);
@@ -208,7 +208,7 @@ class PlayerInventory extends BaseInventory{
 
 	public function setItem($index, Item $item){
 		if($index < 0 or $index >= $this->size){
-			return false;
+			return \false;
 		}elseif($item->getId() === 0 or $item->getCount() <= 0){
 			return $this->clear($index);
 		}
@@ -217,14 +217,14 @@ class PlayerInventory extends BaseInventory{
 			Server::getInstance()->getPluginManager()->callEvent($ev = new EntityArmorChangeEvent($this->getHolder(), $this->getItem($index), $item, $index));
 			if($ev->isCancelled() and $this->getHolder() instanceof Human){
 				$this->sendArmorSlot($index, $this->getViewers());
-				return false;
+				return \false;
 			}
 			$item = $ev->getNewItem();
 		}else{
 			Server::getInstance()->getPluginManager()->callEvent($ev = new EntityInventoryChangeEvent($this->getHolder(), $this->getItem($index), $item, $index));
 			if($ev->isCancelled()){
 				$this->sendSlot($index, $this->getViewers());
-				return false;
+				return \false;
 			}
 			$item = $ev->getNewItem();
 		}
@@ -234,12 +234,12 @@ class PlayerInventory extends BaseInventory{
 		$this->slots[$index] = clone $item;
 		$this->onSlotChange($index, $old);
 
-		return true;
+		return \true;
 	}
 
 	public function clear($index){
 		if(isset($this->slots[$index])){
-			$item = Item::get(Item::AIR, null, 0);
+			$item = Item::get(Item::AIR, \null, 0);
 			$old = $this->slots[$index];
 			if($index >= $this->getSize() and $index < $this->size){ //Armor change
 				Server::getInstance()->getPluginManager()->callEvent($ev = new EntityArmorChangeEvent($this->getHolder(), $old, $item, $index));
@@ -249,7 +249,7 @@ class PlayerInventory extends BaseInventory{
 					}else{
 						$this->sendSlot($index, $this->getViewers());
 					}
-					return false;
+					return \false;
 				}
 				$item = $ev->getNewItem();
 			}else{
@@ -260,7 +260,7 @@ class PlayerInventory extends BaseInventory{
 					}else{
 						$this->sendSlot($index, $this->getViewers());
 					}
-					return false;
+					return \false;
 				}
 				$item = $ev->getNewItem();
 			}
@@ -273,7 +273,7 @@ class PlayerInventory extends BaseInventory{
 			$this->onSlotChange($index, $old);
 		}
 
-		return true;
+		return \true;
 	}
 
 	/**
@@ -311,7 +311,7 @@ class PlayerInventory extends BaseInventory{
 		$pk->slots = $armor;
 		$pk->encode();
 		$pk;
-		$pk->isEncoded = true;
+		$pk->isEncoded = \true;
 
 		foreach($target as $player){
 			if($player === $this->getHolder()){
@@ -331,7 +331,7 @@ class PlayerInventory extends BaseInventory{
 	public function setArmorContents(array $items){
 		for($i = 0; $i < 4; ++$i){
 			if(!isset($items[$i]) or !($items[$i] instanceof Item)){
-				$items[$i] = Item::get(Item::AIR, null, 0);
+				$items[$i] = Item::get(Item::AIR, \null, 0);
 			}
 
 			if($items[$i]->getId() === Item::AIR){
@@ -358,7 +358,7 @@ class PlayerInventory extends BaseInventory{
 		$pk->eid = $this->getHolder()->getId();
 		$pk->slots = $armor;
 		$pk->encode();
-		$pk->isEncoded = true;
+		$pk->isEncoded = \true;
 
 		foreach($target as $player){
 			if($player === $this->getHolder()){
@@ -404,7 +404,7 @@ class PlayerInventory extends BaseInventory{
 					$pk->hotbar[] = $index <= -1 ? -1 : $index + 9;
 				}
 			}
-			if(($id = $player->getWindowId($this)) === -1 or $player->spawned !== true){
+			if(($id = $player->getWindowId($this)) === -1 or $player->spawned !== \true){
 				$this->close($player);
 				continue;
 			}

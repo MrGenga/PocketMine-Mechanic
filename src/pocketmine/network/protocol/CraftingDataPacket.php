@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 use pocketmine\inventory\FurnaceRecipe;
@@ -42,7 +51,7 @@ class CraftingDataPacket extends DataPacket{
 
 	/** @var object[] */
 	public $entries = [];
-	public $cleanRecipes = false;
+	public $cleanRecipes = \false;
 
 	private static function writeEntry($entry, BinaryStream $stream){
 		if($entry instanceof ShapelessRecipe){
@@ -76,8 +85,8 @@ class CraftingDataPacket extends DataPacket{
 		$stream->putInt($recipe->getWidth());
 		$stream->putInt($recipe->getHeight());
 
-		for($z = 0; $z < $recipe->getWidth(); ++$z){
-			for($x = 0; $x < $recipe->getHeight(); ++$x){
+		for($z = 0; $z < $recipe->getHeight(); ++$z){
+			for($x = 0; $x < $recipe->getWidth(); ++$x){
 				$stream->putSlot($recipe->getIngredient($x, $z));
 			}
 		}
@@ -110,7 +119,7 @@ class CraftingDataPacket extends DataPacket{
 		for($i = 0; $i < $list->getSize(); ++$i){
 			$entry = $list->getSlot($i);
 			$stream->putInt($entry->getCost());
-			$stream->putByte(count($entry->getEnchantments()));
+			$stream->putByte(\count($entry->getEnchantments()));
 			foreach($entry->getEnchantments() as $enchantment){
 				$stream->putInt($enchantment->getId());
 				$stream->putInt($enchantment->getLevel());
@@ -147,25 +156,25 @@ class CraftingDataPacket extends DataPacket{
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putInt(count($this->entries));
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \pack("N", \count($this->entries));
 
 		$writer = new BinaryStream();
 		foreach($this->entries as $d){
 			$entryType = self::writeEntry($d, $writer);
 			if($entryType >= 0){
-				$this->putInt($entryType);
-				$this->putInt(strlen($writer->getBuffer()));
-				$this->put($writer->getBuffer());
+				$this->buffer .= \pack("N", $entryType);
+				$this->buffer .= \pack("N", \strlen($writer->getBuffer()));
+				$this->buffer .= $writer->getBuffer();
 			}else{
-				$this->putInt(-1);
-				$this->putInt(0);
+				$this->buffer .= \pack("N", -1);
+				$this->buffer .= \pack("N", 0);
 			}
 
 			$writer->reset();
 		}
 
-		$this->putByte($this->cleanRecipes ? 1 : 0);
+		$this->buffer .= \chr($this->cleanRecipes ? 1 : 0);
 	}
 
 }

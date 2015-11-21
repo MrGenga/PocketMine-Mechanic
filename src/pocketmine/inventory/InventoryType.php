@@ -48,11 +48,11 @@ class InventoryType{
 	 * @return InventoryType
 	 */
 	public static function get($index){
-		return isset(static::$default[$index]) ? static::$default[$index] : null;
+		return isset(static::$default[$index]) ? static::$default[$index] : \null;
 	}
 
 	public static function init(){
-		if(count(static::$default) > 0){
+		if(\count(static::$default) > 0){
 			return;
 		}
 

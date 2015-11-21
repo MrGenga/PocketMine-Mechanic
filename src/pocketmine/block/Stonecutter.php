@@ -43,19 +43,19 @@ class Stonecutter extends Solid{
 	}
 
 	public function canBeActivated(){
-		return true;
+		return \true;
 	}
 
-	public function onActivate(Item $item, Player $player = null){
+	public function onActivate(Item $item, Player $player = \null){
 		if($player instanceof Player){
 			$player->craftingType = 2;
 		}
 
-		return true;
+		return \true;
 	}
 
 	public function getDrops(Item $item){
-		if($item->isPickaxe() >= 1){
+		if($item->isPickaxe() >= Tool::TIER_WOODEN){
 			return [
 				[Item::STONECUTTER, 0, 1],
 			];

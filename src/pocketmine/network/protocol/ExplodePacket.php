@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class ExplodePacket extends DataPacket{
@@ -43,17 +52,17 @@ class ExplodePacket extends DataPacket{
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putFloat($this->x);
-		$this->putFloat($this->y);
-		$this->putFloat($this->z);
-		$this->putFloat($this->radius);
-		$this->putInt(count($this->records));
-		if(count($this->records) > 0){
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $this->x) : \strrev(\pack("f", $this->x)));
+		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $this->y) : \strrev(\pack("f", $this->y)));
+		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $this->z) : \strrev(\pack("f", $this->z)));
+		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $this->radius) : \strrev(\pack("f", $this->radius)));
+		$this->buffer .= \pack("N", \count($this->records));
+		if(\count($this->records) > 0){
 			foreach($this->records as $record){
-				$this->putByte($record->x);
-				$this->putByte($record->y);
-				$this->putByte($record->z);
+				$this->buffer .= \chr($record->x);
+				$this->buffer .= \chr($record->y);
+				$this->buffer .= \chr($record->z);
 			}
 		}
 	}

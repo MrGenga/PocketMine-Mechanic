@@ -21,7 +21,15 @@
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use raklib\Binary;
+
+
+
+
+
+
+
+
 
 class CLIENT_HANDSHAKE_DataPacket extends Packet{
     public static $ID = 0x13;
@@ -46,7 +54,7 @@ class CLIENT_HANDSHAKE_DataPacket extends Packet{
 			$this->systemAddresses[$i] = [$addr, $port, $version];
 		}
 		
-        $this->sendPing = $this->getLong();
-        $this->sendPong = $this->getLong();
+        $this->sendPing = Binary::readLong($this->get(8));
+        $this->sendPong = Binary::readLong($this->get(8));
     }
 }

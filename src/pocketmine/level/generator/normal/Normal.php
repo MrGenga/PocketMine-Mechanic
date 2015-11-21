@@ -66,11 +66,11 @@ class Normal extends Generator{
 	/** @var BiomeSelector */
 	private $selector;
 
-	private static $GAUSSIAN_KERNEL = null;
+	private static $GAUSSIAN_KERNEL = \null;
 	private static $SMOOTH_SIZE = 2;
 
 	public function __construct(array $options = []){
-		if(self::$GAUSSIAN_KERNEL === null){
+		if(self::$GAUSSIAN_KERNEL === \null){
 			self::generateKernel();
 		}
 	}
@@ -87,7 +87,7 @@ class Normal extends Generator{
 			for($sz = -self::$SMOOTH_SIZE; $sz <= self::$SMOOTH_SIZE; ++$sz){
 				$bx = $bellSize * $sx;
 				$bz = $bellSize * $sz;
-				self::$GAUSSIAN_KERNEL[$sx + self::$SMOOTH_SIZE][$sz + self::$SMOOTH_SIZE] = $bellHeight * exp(-($bx * $bx + $bz * $bz) / 2);
+				self::$GAUSSIAN_KERNEL[$sx + self::$SMOOTH_SIZE][$sz + self::$SMOOTH_SIZE] = $bellHeight * \exp(-($bx * $bx + $bz * $bz) / 2);
 			}
 		}
 	}
@@ -215,7 +215,7 @@ class Normal extends Generator{
 						if($sx === 0 and $sz === 0){
 							$adjacent = $biome;
 						}else{
-							$index = Level::chunkHash($chunkX * 16 + $x + $sx, $chunkZ * 16 + $z + $sz);
+							$index = (\PHP_INT_SIZE === 8 ? ((($chunkX * 16 + $x + $sx) & 0xFFFFFFFF) << 32) | (( $chunkZ * 16 + $z + $sz) & 0xFFFFFFFF) : ($chunkX * 16 + $x + $sx) . ":" . ( $chunkZ * 16 + $z + $sz));
 							if(isset($biomeCache[$index])){
 								$adjacent = $biomeCache[$index];
 							}else{
@@ -237,7 +237,7 @@ class Normal extends Generator{
 				$minSum /= $weightSum;
 				$maxSum /= $weightSum;
 
-				$chunk->setBiomeColor($x, $z, sqrt($color[0] / $weightSum), sqrt($color[1] / $weightSum), sqrt($color[2] / $weightSum));
+				$chunk->setBiomeColor($x, $z, \sqrt($color[0] / $weightSum), \sqrt($color[1] / $weightSum), \sqrt($color[2] / $weightSum));
 
 				$smoothHeight = ($maxSum - $minSum) / 2;
 

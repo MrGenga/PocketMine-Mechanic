@@ -21,11 +21,17 @@
 
 namespace pocketmine\utils;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
-#ifndef COMPILE
 
-#endif
+
+
+
+
+
+
+
+
 
 use pocketmine\item\Item;
 
@@ -45,7 +51,7 @@ class BinaryStream extends \stdClass{
 		$this->offset = 0;
 	}
 
-	public function setBuffer($buffer = null, $offset = 0){
+	public function setBuffer($buffer = \null, $offset = 0){
 		$this->buffer = $buffer;
 		$this->offset = (int) $offset;
 	}
@@ -60,13 +66,13 @@ class BinaryStream extends \stdClass{
 
 	public function get($len){
 		if($len < 0){
-			$this->offset = strlen($this->buffer) - 1;
+			$this->offset = \strlen($this->buffer) - 1;
 			return "";
-		}elseif($len === true){
-			return substr($this->buffer, $this->offset);
+		}elseif($len === \true){
+			return \substr($this->buffer, $this->offset);
 		}
 
-		return $len === 1 ? $this->buffer{$this->offset++} : substr($this->buffer, ($this->offset += $len) - $len, $len);
+		return $len === 1 ? $this->buffer{$this->offset++} : \substr($this->buffer, ($this->offset += $len) - $len, $len);
 	}
 
 	public function put($str){
@@ -82,11 +88,11 @@ class BinaryStream extends \stdClass{
 	}
 
 	public function getInt(){
-		return Binary::readInt($this->get(4));
+		return (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 	}
 
 	public function putInt($v){
-		$this->buffer .= Binary::writeInt($v);
+		$this->buffer .= \pack("N", $v);
 	}
 
 	public function getLLong(){
@@ -98,83 +104,83 @@ class BinaryStream extends \stdClass{
 	}
 
 	public function getLInt(){
-		return Binary::readLInt($this->get(4));
+		return (\PHP_INT_SIZE === 8 ? \unpack("V", $this->get(4))[1] << 32 >> 32 : \unpack("V", $this->get(4))[1]);
 	}
 
 	public function putLInt($v){
-		$this->buffer .= Binary::writeLInt($v);
+		$this->buffer .= \pack("V", $v);
 	}
 
 	public function getSignedShort(){
-		return Binary::readSignedShort($this->get(2));
+		return (\PHP_INT_SIZE === 8 ? \unpack("n", $this->get(2))[1] << 48 >> 48 : \unpack("n", $this->get(2))[1] << 16 >> 16);
 	}
 
 	public function putShort($v){
-		$this->buffer .= Binary::writeShort($v);
+		$this->buffer .= \pack("n", $v);
 	}
 
 	public function getShort(){
-		return Binary::readShort($this->get(2));
+		return \unpack("n", $this->get(2))[1];
 	}
 
 	public function putSignedShort($v){
-		$this->buffer .= Binary::writeShort($v);
+		$this->buffer .= \pack("n", $v);
 	}
 
 	public function getFloat(){
-		return Binary::readFloat($this->get(4));
+		return (\ENDIANNESS === 0 ? \unpack("f", $this->get(4))[1] : \unpack("f", \strrev($this->get(4)))[1]);
 	}
 
 	public function putFloat($v){
-		$this->buffer .= Binary::writeFloat($v);
+		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $v) : \strrev(\pack("f", $v)));
 	}
 
-	public function getLShort($signed = true){
-		return $signed ? Binary::readSignedLShort($this->get(2)) : Binary::readLShort($this->get(2));
+	public function getLShort($signed = \true){
+		return $signed ? (\PHP_INT_SIZE === 8 ? \unpack("v", $this->get(2))[1] << 48 >> 48 : \unpack("v", $this->get(2))[1] << 16 >> 16) : \unpack("v", $this->get(2))[1];
 	}
 
 	public function putLShort($v){
-		$this->buffer .= Binary::writeLShort($v);
+		$this->buffer .= \pack("v", $v);
 	}
 
 	public function getLFloat(){
-		return Binary::readLFloat($this->get(4));
+		return (\ENDIANNESS === 0 ? \unpack("f", \strrev($this->get(4)))[1] : \unpack("f", $this->get(4))[1]);
 	}
 
 	public function putLFloat($v){
-		$this->buffer .= Binary::writeLFloat($v);
+		$this->buffer .= (\ENDIANNESS === 0 ? \strrev(\pack("f", $v)) : \pack("f", $v));
 	}
 
 
 	public function getTriad(){
-		return Binary::readTriad($this->get(3));
+		return \unpack("N", "\x00" . $this->get(3))[1];
 	}
 
 	public function putTriad($v){
-		$this->buffer .= Binary::writeTriad($v);
+		$this->buffer .= \substr(\pack("N", $v), 1);
 	}
 
 
 	public function getLTriad(){
-		return Binary::readLTriad($this->get(3));
+		return \unpack("V", $this->get(3) . "\x00")[1];
 	}
 
 	public function putLTriad($v){
-		$this->buffer .= Binary::writeLTriad($v);
+		$this->buffer .= \substr(\pack("V", $v), 0, -1);
 	}
 
 	public function getByte(){
-		return ord($this->buffer{$this->offset++});
+		return \ord($this->buffer{$this->offset++});
 	}
 
 	public function putByte($v){
-		$this->buffer .= chr($v);
+		$this->buffer .= \chr($v);
 	}
 
 	public function getDataArray($len = 10){
 		$data = [];
 		for($i = 1; $i <= $len and !$this->feof(); ++$i){
-			$data[] = $this->get($this->getTriad());
+			$data[] = $this->get(\unpack("N", "\x00" . $this->get(3))[1]);
 		}
 
 		return $data;
@@ -182,8 +188,8 @@ class BinaryStream extends \stdClass{
 
 	public function putDataArray(array $data = []){
 		foreach($data as $v){
-			$this->putTriad(strlen($v));
-			$this->put($v);
+			$this->buffer .= \substr(\pack("N", \strlen($v)), 1);
+			$this->buffer .= $v;
 		}
 	}
 
@@ -192,21 +198,21 @@ class BinaryStream extends \stdClass{
 	}
 
 	public function putUUID(UUID $uuid){
-		$this->put($uuid->toBinary());
+		$this->buffer .= $uuid->toBinary();
 	}
 
 	public function getSlot(){
-		$id = $this->getSignedShort();
+		$id = (\PHP_INT_SIZE === 8 ? \unpack("n", $this->get(2))[1] << 48 >> 48 : \unpack("n", $this->get(2))[1] << 16 >> 16);
 		
 		if($id <= 0){
 			return Item::get(0, 0, 0);
 		}
 		
-		$cnt = $this->getByte();
+		$cnt = \ord($this->get(1));
 		
-		$data = $this->getShort();
+		$data = \unpack("n", $this->get(2))[1];
 		
-		$nbtLen = $this->getShort();
+		$nbtLen = \unpack("n", $this->get(2))[1];
 		
 		$nbt = "";
 		
@@ -224,26 +230,26 @@ class BinaryStream extends \stdClass{
 
 	public function putSlot(Item $item){
 		if($item->getId() === 0){
-			$this->putShort(0);
+			$this->buffer .= \pack("n", 0);
 			return;
 		}
 		
-		$this->putShort($item->getId());
-		$this->putByte($item->getCount());
-		$this->putShort($item->getDamage() === null ? -1 : $item->getDamage());
+		$this->buffer .= \pack("n", $item->getId());
+		$this->buffer .= \chr($item->getCount());
+		$this->buffer .= \pack("n", $item->getDamage() === \null ? -1 : $item->getDamage());
 		$nbt = $item->getCompoundTag();
-		$this->putShort(strlen($nbt));
-		$this->put($nbt);
+		$this->buffer .= \pack("n", \strlen($nbt));
+		$this->buffer .= $nbt;
 		
 	}
 
 	public function getString(){
-		return $this->get($this->getShort());
+		return $this->get(\unpack("n", $this->get(2))[1]);
 	}
 
 	public function putString($v){
-		$this->putShort(strlen($v));
-		$this->put($v);
+		$this->buffer .= \pack("n", \strlen($v));
+		$this->buffer .= $v;
 	}
 
 	public function feof(){

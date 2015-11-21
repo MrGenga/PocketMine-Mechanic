@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class SetSpawnPositionPacket extends DataPacket{
@@ -36,10 +45,10 @@ class SetSpawnPositionPacket extends DataPacket{
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putInt($this->x);
-		$this->putInt($this->y);
-		$this->putInt($this->z);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \pack("N", $this->x);
+		$this->buffer .= \pack("N", $this->y);
+		$this->buffer .= \pack("N", $this->z);
 	}
 
 }

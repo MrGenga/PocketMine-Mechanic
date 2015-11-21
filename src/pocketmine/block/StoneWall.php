@@ -27,6 +27,8 @@ use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 
 class StoneWall extends Transparent{
+	const NONE_MOSSY_WALL = 0;
+	const MOSSY_WALL = 1;
 
 	protected $id = self::STONE_WALL;
 
@@ -35,7 +37,7 @@ class StoneWall extends Transparent{
 	}
 
 	public function isSolid(){
-		return false;
+		return \false;
 	}
 
 	public function getToolType(){
@@ -85,7 +87,7 @@ class StoneWall extends Transparent{
 	}
 
 	public function canConnect(Block $block){
-		return ($block->getId() !== self::COBBLE_WALL and $block->getId() !== self::FENCE_GATE) ? $block->isSolid() and !$block->isTransparent() : true;
+		return ($block->getId() !== self::COBBLE_WALL and $block->getId() !== self::FENCE_GATE) ? $block->isSolid() and !$block->isTransparent() : \true;
 	}
 
 }

@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class ContainerClosePacket extends DataPacket{
@@ -30,12 +39,12 @@ class ContainerClosePacket extends DataPacket{
 	public $windowid;
 
 	public function decode(){
-		$this->windowid = $this->getByte();
+		$this->windowid = \ord($this->get(1));
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putByte($this->windowid);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \chr($this->windowid);
 	}
 
 }

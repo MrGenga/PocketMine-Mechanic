@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class CraftingEventPacket extends DataPacket{
@@ -40,16 +49,16 @@ class CraftingEventPacket extends DataPacket{
 	}
 
 	public function decode(){
-		$this->windowId = $this->getByte();
-		$this->type = $this->getInt();
+		$this->windowId = \ord($this->get(1));
+		$this->type = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 		$this->id = $this->getUUID();
 
-		$size = $this->getInt();
+		$size = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 		for($i = 0; $i < $size and $i < 128; ++$i){
 			$this->input[] = $this->getSlot();
 		}
 
-		$size = $this->getInt();
+		$size = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 		for($i = 0; $i < $size and $i < 128; ++$i){
 			$this->output[] = $this->getSlot();
 		}

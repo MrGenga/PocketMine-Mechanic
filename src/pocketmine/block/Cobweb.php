@@ -34,7 +34,7 @@ class Cobweb extends Flowable{
 	}
 
 	public function hasEntityCollision(){
-		return true;
+		return \true;
 	}
 
 	public function getName(){

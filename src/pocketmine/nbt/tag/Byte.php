@@ -23,7 +23,21 @@ namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Byte extends NamedTag{
 
@@ -32,10 +46,10 @@ class Byte extends NamedTag{
 	}
 
 	public function read(NBT $nbt){
-		$this->value = $nbt->getByte();
+		$this->value = \ord($nbt->get(1));
 	}
 
 	public function write(NBT $nbt){
-		$nbt->putByte($this->value);
+		$nbt->buffer .= \chr($this->value);
 	}
 }

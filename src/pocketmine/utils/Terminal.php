@@ -47,15 +47,15 @@ abstract class Terminal{
 	public static $COLOR_YELLOW = "";
 	public static $COLOR_WHITE = "";
 
-	private static $formattingCodes = null;
+	private static $formattingCodes = \null;
 
 	public static function hasFormattingCodes(){
-		if(self::$formattingCodes === null){
-			$opts = getopt("", ["enable-ansi", "disable-ansi"]);
+		if(self::$formattingCodes === \null){
+			$opts = \getopt("", ["enable-ansi", "disable-ansi"]);
 			if(isset($opts["disable-ansi"])){
-				self::$formattingCodes = false;
+				self::$formattingCodes = \false;
 			}else{
-				self::$formattingCodes = ((Utils::getOS() !== "win" and getenv("TERM") != "" and (!function_exists("posix_ttyname") or !defined("STDOUT") or posix_ttyname(STDOUT) !== false)) or isset($opts["enable-ansi"]));
+				self::$formattingCodes = ((Utils::getOS() !== "win" and \getenv("TERM") != "" and (!\function_exists("posix_ttyname") or !\defined("STDOUT") or \posix_ttyname(STDOUT) !== \false)) or isset($opts["enable-ansi"]));
 			}
 		}
 

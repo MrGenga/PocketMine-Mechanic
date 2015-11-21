@@ -15,11 +15,16 @@
 
 namespace raklib\protocol;
 
-#ifndef COMPILE
-use raklib\Binary;
-#endif
 
-#include <rules/RakLibPacket.h>
+use raklib\Binary;
+
+
+
+
+
+
+
+
 
 abstract class AcknowledgePacket extends Packet{
     /** @var int[] */
@@ -28,8 +33,8 @@ abstract class AcknowledgePacket extends Packet{
     public function encode(){
         parent::encode();
         $payload = "";
-        sort($this->packets, SORT_NUMERIC);
-        $count = count($this->packets);
+        \sort($this->packets, SORT_NUMERIC);
+        $count = \count($this->packets);
         $records = 0;
 
         if($count > 0){
@@ -45,12 +50,12 @@ abstract class AcknowledgePacket extends Packet{
                 }elseif($diff > 1){ //Forget about duplicated packets (bad queues?)
                     if($start === $last){
                         $payload .= "\x01";
-                        $payload .= Binary::writeLTriad($start);
+                        $payload .= \substr(\pack("V", $start), 0, -1);
                         $start = $last = $current;
                     }else{
                         $payload .= "\x00";
-                        $payload .= Binary::writeLTriad($start);
-                        $payload .= Binary::writeLTriad($last);
+                        $payload .= \substr(\pack("V", $start), 0, -1);
+                        $payload .= \substr(\pack("V", $last), 0, -1);
                         $start = $last = $current;
                     }
                     ++$records;
@@ -59,28 +64,28 @@ abstract class AcknowledgePacket extends Packet{
 
             if($start === $last){
                 $payload .= "\x01";
-                $payload .= Binary::writeLTriad($start);
+                $payload .= \substr(\pack("V", $start), 0, -1);
             }else{
                 $payload .= "\x00";
-                $payload .= Binary::writeLTriad($start);
-                $payload .= Binary::writeLTriad($last);
+                $payload .= \substr(\pack("V", $start), 0, -1);
+                $payload .= \substr(\pack("V", $last), 0, -1);
             }
             ++$records;
         }
 
-        $this->putShort($records);
+        $this->buffer .= \pack("n", $records);
         $this->buffer .= $payload;
     }
 
     public function decode(){
         parent::decode();
-        $count = $this->getShort();
+        $count = \unpack("n", $this->get(2))[1];
         $this->packets = [];
         $cnt = 0;
         for($i = 0; $i < $count and !$this->feof() and $cnt < 4096; ++$i){
-            if($this->getByte() === 0){
-                $start = $this->getLTriad();
-                $end = $this->getLTriad();
+            if(\ord($this->get(1)) === 0){
+                $start = \unpack("V", $this->get(3) . "\x00")[1];
+                $end = \unpack("V", $this->get(3) . "\x00")[1];
                 if(($end - $start) > 512){
                     $end = $start + 512;
                 }
@@ -88,7 +93,7 @@ abstract class AcknowledgePacket extends Packet{
                     $this->packets[$cnt++] = $c;
                 }
             }else{
-                $this->packets[$cnt++] = $this->getLTriad();
+                $this->packets[$cnt++] = \unpack("V", $this->get(3) . "\x00")[1];
             }
         }
     }

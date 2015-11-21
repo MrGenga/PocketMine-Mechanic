@@ -181,7 +181,7 @@ class Block extends Position implements Metadatable{
 	const LILY_PAD = 111;
 	const NETHER_BRICKS = 112;
 	const NETHER_BRICK_BLOCK = 112;
-
+	const NETHER_BRICK_FENCE = 113;
 	const NETHER_BRICKS_STAIRS = 114;
 
 	const ENCHANTING_TABLE = 116;
@@ -258,26 +258,26 @@ class Block extends Position implements Metadatable{
 	const NETHER_REACTOR = 247;
 
 	/** @var \SplFixedArray */
-	public static $list = null;
+	public static $list = \null;
 	/** @var \SplFixedArray */
-	public static $fullList = null;
+	public static $fullList = \null;
 
 	/** @var \SplFixedArray */
-	public static $light = null;
+	public static $light = \null;
 	/** @var \SplFixedArray */
-	public static $lightFilter = null;
+	public static $lightFilter = \null;
 	/** @var \SplFixedArray */
-	public static $solid = null;
+	public static $solid = \null;
 	/** @var \SplFixedArray */
-	public static $hardness = null;
+	public static $hardness = \null;
 	/** @var \SplFixedArray */
-	public static $transparent = null;
+	public static $transparent = \null;
 
 	protected $id;
 	protected $meta = 0;
 
 	/** @var AxisAlignedBB */
-	public $boundingBox = null;
+	public $boundingBox = \null;
 
 	/**
 	 * Backwards-compatibility with old way to define block properties
@@ -302,11 +302,11 @@ class Block extends Position implements Metadatable{
 			"isActivable" => "canBeActivated",
 			"hasEntityCollision" => "hasEntityCollision"
 		];
-		return isset($map[$key]) ? $this->{$map[$key]}() : null;
+		return isset($map[$key]) ? $this->{$map[$key]}() : \null;
 	}
 
 	public static function init(){
-		if(self::$list === null){
+		if(self::$list === \null){
 			self::$list = new \SplFixedArray(256);
 			self::$fullList = new \SplFixedArray(4096);
 			self::$light = new \SplFixedArray(256);
@@ -413,7 +413,7 @@ class Block extends Position implements Metadatable{
 			self::$list[self::MYCELIUM] = Mycelium::class;
 			self::$list[self::WATER_LILY] = WaterLily::class;
 			self::$list[self::NETHER_BRICKS] = NetherBrick::class;
-
+			self::$list[self::NETHER_BRICK_FENCE] = NetherBrickFence::class;
 			self::$list[self::NETHER_BRICKS_STAIRS] = NetherBrickStairs::class;
 
 			self::$list[self::ENCHANTING_TABLE] = EnchantingTable::class;
@@ -468,7 +468,7 @@ class Block extends Position implements Metadatable{
 			self::$list[self::NETHER_REACTOR] = NetherReactor::class;
 
 			foreach(self::$list as $id => $class){
-				if($class !== null){
+				if($class !== \null){
 					/** @var Block $block */
 					$block = new $class();
 
@@ -511,10 +511,10 @@ class Block extends Position implements Metadatable{
 	 *
 	 * @return Block
 	 */
-	public static function get($id, $meta = 0, Position $pos = null){
+	public static function get($id, $meta = 0, Position $pos = \null){
 		try{
 			$block = self::$list[$id];
-			if($block !== null){
+			if($block !== \null){
 				$block = new $block($meta);
 			}else{
 				$block = new Block($id, $meta);
@@ -523,7 +523,7 @@ class Block extends Position implements Metadatable{
 			$block = new Block($id, $meta);
 		}
 
-		if($pos !== null){
+		if($pos !== \null){
 			$block->x = $pos->x;
 			$block->y = $pos->y;
 			$block->z = $pos->z;
@@ -556,8 +556,8 @@ class Block extends Position implements Metadatable{
 	 *
 	 * @return bool
 	 */
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
-		return $this->getLevel()->setBlock($this, $this, true, true);
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+		return $this->getLevel()->setBlock($this, $this, \true, \true);
 	}
 
 	/**
@@ -568,7 +568,7 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function isBreakable(Item $item){
-		return true;
+		return \true;
 	}
 
 	/**
@@ -579,7 +579,7 @@ class Block extends Position implements Metadatable{
 	 * @return mixed
 	 */
 	public function onBreak(Item $item){
-		return $this->getLevel()->setBlock($this, new Air(), true, true);
+		return $this->getLevel()->setBlock($this, new Air(), \true, \true);
 	}
 
 	/**
@@ -601,8 +601,8 @@ class Block extends Position implements Metadatable{
 	 *
 	 * @return bool
 	 */
-	public function onActivate(Item $item, Player $player = null){
-		return false;
+	public function onActivate(Item $item, Player $player = \null){
+		return \false;
 	}
 
 	/**
@@ -646,7 +646,7 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBePlaced(){
-		return true;
+		return \true;
 	}
 
 	/**
@@ -655,18 +655,18 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeReplaced(){
-		return false;
+		return \false;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isTransparent(){
-		return false;
+		return \false;
 	}
 
 	public function isSolid(){
-		return true;
+		return \true;
 	}
 
 	/**
@@ -675,7 +675,7 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeFlowedInto(){
-		return false;
+		return \false;
 	}
 
 	/**
@@ -684,15 +684,15 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeActivated(){
-		return false;
+		return \false;
 	}
 
 	public function hasEntityCollision(){
-		return false;
+		return \false;
 	}
 
 	public function canPassThrough(){
-		return false;
+		return \false;
 	}
 
 	/**
@@ -737,7 +737,7 @@ class Block extends Position implements Metadatable{
 		$this->y = (int) $v->y;
 		$this->z = (int) $v->z;
 		$this->level = $v->level;
-		$this->boundingBox = null;
+		$this->boundingBox = \null;
 	}
 
 	/**
@@ -770,9 +770,9 @@ class Block extends Position implements Metadatable{
 			if($this->getToolType() === Tool::TYPE_SHEARS and $item->isShears()){
 				$base /= 15;
 			}elseif(
-				($this->getToolType() === Tool::TYPE_PICKAXE and ($tier = $item->isPickaxe()) !== false) or
-				($this->getToolType() === Tool::TYPE_AXE and ($tier = $item->isAxe()) !== false) or
-				($this->getToolType() === Tool::TYPE_SHOVEL and ($tier = $item->isShovel()) !== false)
+				($this->getToolType() === Tool::TYPE_PICKAXE and ($tier = $item->isPickaxe()) !== \false) or
+				($this->getToolType() === Tool::TYPE_AXE and ($tier = $item->isAxe()) !== \false) or
+				($this->getToolType() === Tool::TYPE_SHOVEL and ($tier = $item->isShovel()) !== \false)
 			){
 				switch($tier){
 					case Tool::TIER_WOODEN:
@@ -840,7 +840,7 @@ class Block extends Position implements Metadatable{
 	public function collidesWithBB(AxisAlignedBB $bb){
 		$bb2 = $this->getBoundingBox();
 
-		return $bb2 !== null and $bb->intersectsWith($bb2);
+		return $bb2 !== \null and $bb->intersectsWith($bb2);
 	}
 
 	/**
@@ -854,7 +854,7 @@ class Block extends Position implements Metadatable{
 	 * @return AxisAlignedBB
 	 */
 	public function getBoundingBox(){
-		if($this->boundingBox === null){
+		if($this->boundingBox === \null){
 			$this->boundingBox = $this->recalculateBoundingBox();
 		}
 		return $this->boundingBox;
@@ -882,8 +882,8 @@ class Block extends Position implements Metadatable{
 	 */
 	public function calculateIntercept(Vector3 $pos1, Vector3 $pos2){
 		$bb = $this->getBoundingBox();
-		if($bb === null){
-			return null;
+		if($bb === \null){
+			return \null;
 		}
 
 		$v1 = $pos1->getIntermediateWithXValue($pos2, $bb->minX);
@@ -893,54 +893,54 @@ class Block extends Position implements Metadatable{
 		$v5 = $pos1->getIntermediateWithZValue($pos2, $bb->minZ);
 		$v6 = $pos1->getIntermediateWithZValue($pos2, $bb->maxZ);
 
-		if($v1 !== null and !$bb->isVectorInYZ($v1)){
-			$v1 = null;
+		if($v1 !== \null and !$bb->isVectorInYZ($v1)){
+			$v1 = \null;
 		}
 
-		if($v2 !== null and !$bb->isVectorInYZ($v2)){
-			$v2 = null;
+		if($v2 !== \null and !$bb->isVectorInYZ($v2)){
+			$v2 = \null;
 		}
 
-		if($v3 !== null and !$bb->isVectorInXZ($v3)){
-			$v3 = null;
+		if($v3 !== \null and !$bb->isVectorInXZ($v3)){
+			$v3 = \null;
 		}
 
-		if($v4 !== null and !$bb->isVectorInXZ($v4)){
-			$v4 = null;
+		if($v4 !== \null and !$bb->isVectorInXZ($v4)){
+			$v4 = \null;
 		}
 
-		if($v5 !== null and !$bb->isVectorInXY($v5)){
-			$v5 = null;
+		if($v5 !== \null and !$bb->isVectorInXY($v5)){
+			$v5 = \null;
 		}
 
-		if($v6 !== null and !$bb->isVectorInXY($v6)){
-			$v6 = null;
+		if($v6 !== \null and !$bb->isVectorInXY($v6)){
+			$v6 = \null;
 		}
 
 		$vector = $v1;
 
-		if($v2 !== null and ($vector === null or $pos1->distanceSquared($v2) < $pos1->distanceSquared($vector))){
+		if($v2 !== \null and ($vector === \null or $pos1->distanceSquared($v2) < $pos1->distanceSquared($vector))){
 			$vector = $v2;
 		}
 
-		if($v3 !== null and ($vector === null or $pos1->distanceSquared($v3) < $pos1->distanceSquared($vector))){
+		if($v3 !== \null and ($vector === \null or $pos1->distanceSquared($v3) < $pos1->distanceSquared($vector))){
 			$vector = $v3;
 		}
 
-		if($v4 !== null and ($vector === null or $pos1->distanceSquared($v4) < $pos1->distanceSquared($vector))){
+		if($v4 !== \null and ($vector === \null or $pos1->distanceSquared($v4) < $pos1->distanceSquared($vector))){
 			$vector = $v4;
 		}
 
-		if($v5 !== null and ($vector === null or $pos1->distanceSquared($v5) < $pos1->distanceSquared($vector))){
+		if($v5 !== \null and ($vector === \null or $pos1->distanceSquared($v5) < $pos1->distanceSquared($vector))){
 			$vector = $v5;
 		}
 
-		if($v6 !== null and ($vector === null or $pos1->distanceSquared($v6) < $pos1->distanceSquared($vector))){
+		if($v6 !== \null and ($vector === \null or $pos1->distanceSquared($v6) < $pos1->distanceSquared($vector))){
 			$vector = $v6;
 		}
 
-		if($vector === null){
-			return null;
+		if($vector === \null){
+			return \null;
 		}
 
 		$f = -1;
@@ -973,7 +973,7 @@ class Block extends Position implements Metadatable{
 			return $this->getLevel()->getBlockMetadata()->getMetadata($this, $metadataKey);
 		}
 
-		return null;
+		return \null;
 	}
 
 	public function hasMetadata($metadataKey){

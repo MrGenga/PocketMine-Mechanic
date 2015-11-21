@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 use pocketmine\item\Item;
 
@@ -34,15 +43,15 @@ class ContainerSetSlotPacket extends DataPacket{
 	public $item;
 
 	public function decode(){
-		$this->windowid = $this->getByte();
-		$this->slot = $this->getShort();
+		$this->windowid = \ord($this->get(1));
+		$this->slot = \unpack("n", $this->get(2))[1];
 		$this->item = $this->getSlot();
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putByte($this->windowid);
-		$this->putShort($this->slot);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \chr($this->windowid);
+		$this->buffer .= \pack("n", $this->slot);
 		$this->putSlot($this->item);
 	}
 

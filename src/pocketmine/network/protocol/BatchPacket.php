@@ -21,7 +21,16 @@
 
 namespace pocketmine\network\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
+
+
+
+
+
+
+
+
+
 
 
 class BatchPacket extends DataPacket{
@@ -30,14 +39,14 @@ class BatchPacket extends DataPacket{
 	public $payload;
 
 	public function decode(){
-		$size = $this->getInt();
+		$size = (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
 		$this->payload = $this->get($size);
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putInt(strlen($this->payload));
-		$this->put($this->payload);
+		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= \pack("N", \strlen($this->payload));
+		$this->buffer .= $this->payload;
 	}
 
 }
